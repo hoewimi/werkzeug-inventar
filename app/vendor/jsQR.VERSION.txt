@@ -1,0 +1,8 @@
+jsQR 1.4.0
+Quelle: npm-Paket jsqr@1.4.0 (https://www.npmjs.com/package/jsqr), Datei dist/jsQR.js, unverändert
+Projekt: https://github.com/cozmo/jsQR
+Lizenz: Apache-2.0, Text in jsQR.LICENSE.txt
+Größe: 256885 Byte
+SHA-256: bc40c8a15196236b2314db0856f72ca0b49980cd5413b8c852a7349f5fee0859
+Laden: klassisches <script> (UMD), setzt window.jsQR
+Empfohlen in recherche/technik.md, Abschnitt 2

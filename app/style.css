@@ -1,0 +1,163 @@
+/* Werkzeug-Inventar: Oberfläche fürs iPhone im Hochformat (E19), ohne Rahmenwerk */
+:root {
+  --grund: #f2f4f7; --karte: #ffffff; --text: #1b1f24; --leise: #5b6470; --rand: #d6dbe1;
+  --akzent: #1f3a5f; --akzent-hell: #e6edf5; --ok: #1d7a3a; --fehler: #b3261e; --warn: #8a5a00; --warn-grund: #fff4d6;
+  --oben: env(safe-area-inset-top); --unten: env(safe-area-inset-bottom);
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--grund); color: var(--text);
+  font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+h1, h2, h3 { margin: 0; }
+h2 { font-size: 18px; margin-bottom: 8px; }
+h3 { font-size: 16px; margin: 14px 0 6px; }
+p { margin: 0 0 8px; }
+
+/* ---------- Kopf, Inhalt, Fuß ---------- */
+.kopf {
+  position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 8px;
+  background: var(--akzent); color: #fff; min-height: 52px;
+  padding: calc(var(--oben) + 6px) max(12px, env(safe-area-inset-right)) 6px max(12px, env(safe-area-inset-left));
+}
+.kopf h1 { font-size: 19px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kopf-knopf, .zurueck {
+  font: inherit; background: none; border: 0; color: #fff; min-height: 44px; min-width: 44px; padding: 0 6px; cursor: pointer;
+}
+.kopf-knopf svg { width: 26px; height: 26px; fill: #fff; display: block; margin: auto; }
+.zurueck { font-size: 17px; padding-left: 0; }
+.offline-marke { font-size: 12px; font-weight: 600; background: #fff; color: var(--akzent); border-radius: 999px; padding: 2px 8px; }
+.inhalt { padding: 12px 12px calc(96px + var(--unten)); max-width: 640px; margin: 0 auto; }
+#geraet .inhalt, #einstellungen .inhalt { padding-bottom: calc(24px + var(--unten)); }
+.fuss {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; display: grid; grid-template-columns: 3fr 2fr; gap: 10px;
+  padding: 10px 12px calc(10px + var(--unten)); background: rgba(242, 244, 247, .96); border-top: 1px solid var(--rand);
+}
+.fuss button { min-height: 52px; font-size: 17px; font-weight: 600; }
+
+/* ---------- Knöpfe und Felder ---------- */
+button, .knopf {
+  font: inherit; font-size: 16px; min-height: 44px; padding: 10px 14px; border-radius: 10px;
+  border: 1px solid var(--akzent); background: var(--akzent); color: #fff; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; text-decoration: none; text-align: center;
+}
+button.zweit, .knopf.zweit { background: #fff; color: var(--akzent); }
+button.gefahr { background: #fff; color: var(--fehler); border-color: var(--fehler); }
+button.gefahr-text { color: var(--fehler); border-color: var(--rand); }
+button:disabled { opacity: .4; cursor: default; }
+input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none; }
+input:not([type=file]), textarea, select {
+  font: inherit; font-size: 16px; padding: 10px; border: 1px solid var(--rand); border-radius: 8px;
+  width: 100%; background: #fff; color: var(--text); margin-top: 4px;
+}
+select { min-height: 44px; -webkit-appearance: none; appearance: none;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%235b6470' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 12px center; }
+textarea { resize: vertical; }
+input:focus, textarea:focus, select:focus { outline: 2px solid var(--akzent); outline-offset: -1px; }
+.reihe { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
+.reihe.unten { margin-top: 16px; justify-content: center; }
+.hinweis { color: var(--leise); font-size: 14px; }
+.klein { font-size: 13px; color: var(--leise); font-weight: 400; }
+.mitte { text-align: center; }
+.karte { background: var(--karte); border: 1px solid var(--rand); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+
+/* ---------- Liste ---------- */
+#suche { margin: 0 0 6px; }
+.zaehler { font-size: 14px; color: var(--leise); margin: 4px 2px 8px; }
+.leer { text-align: center; color: var(--leise); padding: 32px 16px; }
+.geraeteliste { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.geraeteliste button {
+  width: 100%; display: grid; grid-template-columns: 60px 1fr; gap: 12px; align-items: center; text-align: left;
+  background: var(--karte); color: var(--text); border: 1px solid var(--rand); padding: 8px; border-radius: 12px;
+}
+.vorschau { width: 60px; height: 60px; border-radius: 8px; background: #e3e7ec; object-fit: cover; display: block; }
+.zeile-text { min-width: 0; display: grid; gap: 1px; }
+.zeile-kopf { display: flex; gap: 8px; align-items: baseline; }
+.zeile-nummer { font: 600 15px/1.3 ui-monospace, Menlo, Consolas, monospace; color: var(--akzent); }
+.zeile-titel { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.zeile-unter { font-size: 14px; color: var(--leise); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.marke { font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; white-space: nowrap; margin-left: auto; }
+.marke.wartet { background: #eceff3; color: var(--leise); }
+.marke.laeuft { background: var(--akzent-hell); color: var(--akzent); }
+.marke.vorschlag { background: var(--akzent); color: #fff; }
+.marke.fehler { background: #fbe4e2; color: var(--fehler); }
+
+/* ---------- Banner ---------- */
+.banner { background: var(--warn-grund); border: 1px solid #e8c766; border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; }
+.banner p { margin: 0 0 4px; }
+.banner.stark { background: #fde7e4; border-color: #e6a29b; }
+.banner.hinweis-banner { background: var(--akzent-hell); border-color: #b8c8dc; }
+
+/* ---------- Gerät ---------- */
+.fotos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.foto .reihe { margin: 6px 0 0; gap: 6px; flex-wrap: nowrap; }
+.foto .knopf { flex: 1; padding: 8px 6px; font-size: 15px; }
+.foto-flaeche {
+  width: 100%; aspect-ratio: 1; padding: 0; border-radius: 12px; overflow: hidden; position: relative;
+  background: #e3e7ec center / cover no-repeat; border: 1px dashed #aab4c0; color: var(--leise);
+}
+.foto-flaeche span { position: absolute; left: 0; right: 0; bottom: 0; padding: 6px; font-size: 14px; font-weight: 600; }
+.foto-flaeche.mit-bild { border-style: solid; border-color: var(--rand); }
+.foto-flaeche.mit-bild span { background: rgba(0, 0, 0, .45); color: #fff; }
+.auslesen-kopf { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.auslesen-status { font-size: 14px; color: var(--leise); }
+#auslesen-hinweis:empty { display: none; }
+#auslesen-hinweis { margin: 8px 0 0; }
+#vorschlag { margin-top: 12px; border-top: 1px solid var(--rand); padding-top: 12px; }
+.vorschlaege { list-style: none; margin: 8px 0; padding: 0; display: grid; gap: 4px; }
+.vorschlaege label { display: grid; grid-template-columns: 28px 1fr; gap: 6px; align-items: start; padding: 6px 0; border-bottom: 1px solid #eceff3; }
+.vorschlaege input { width: 22px; height: 22px; margin: 2px 0 0; }
+.vorschlag-name { font-size: 13px; color: var(--leise); display: block; }
+.vorschlag-wert { font-weight: 600; word-break: break-word; }
+.vorschlag-bisher { font-size: 13px; color: var(--warn); display: block; }
+.kosten { font-size: 14px; color: var(--leise); }
+.felder { display: grid; gap: 4px; }
+.feld { display: block; font-size: 14px; color: var(--leise); margin: 4px 0; }
+.feld input, .feld textarea, .feld select { color: var(--text); }
+.zwei { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.feld-fehler { display: block; color: var(--fehler); font-size: 13px; margin-top: 4px; }
+#entwurf-hinweis { background: var(--akzent-hell); border-radius: 10px; padding: 8px 12px; color: var(--akzent); }
+
+/* ---------- Einstellungen ---------- */
+.tabelle { width: 100%; border-collapse: collapse; font-size: 15px; margin-bottom: 8px; }
+.tabelle td { padding: 6px 0; border-bottom: 1px solid #eceff3; vertical-align: top; }
+.tabelle td:last-child { text-align: right; font-weight: 600; padding-left: 12px; }
+.meldetext { font-size: 14px; white-space: pre-line; }
+.meldetext:empty { display: none; }
+.meldetext.fehler { color: var(--fehler); }
+.meldetext.ok { color: var(--ok); }
+.gut { color: var(--ok); }
+.schlecht { color: var(--fehler); }
+
+/* ---------- Scanner ---------- */
+.scanner { position: fixed; inset: 0; z-index: 20; background: #000; color: #fff; }
+.scanner video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.scanner-rahmen {
+  position: absolute; left: 50%; top: 50%; width: min(72vw, 300px); aspect-ratio: 1; transform: translate(-50%, -50%);
+  border: 4px solid rgba(255, 255, 255, .9); border-radius: 18px; box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .45);
+}
+.scanner-rahmen.treffer { border-color: #2fbf5b; }
+.scanner-text {
+  position: absolute; left: 16px; right: 16px; top: calc(var(--oben) + 24px); text-align: center; font-size: 17px; font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .8);
+}
+.scanner-knoepfe {
+  position: absolute; left: 0; right: 0; bottom: 0; display: flex; gap: 8px; justify-content: center;
+  padding: 12px 12px calc(16px + var(--unten));
+}
+.scanner-knoepfe button { min-height: 50px; flex: 1 1 auto; padding: 10px 8px; font-size: 15px; }
+.scanner-knoepfe button.zweit { background: rgba(255, 255, 255, .92); border-color: transparent; }
+
+/* ---------- Bildansicht, Meldung ---------- */
+.bildansicht { position: fixed; inset: 0; z-index: 30; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.bildansicht img { max-width: 100%; max-height: calc(100% - 60px); object-fit: contain; }
+.bildansicht p { color: #bbb; font-size: 14px; margin: 10px 0 calc(10px + var(--unten)); }
+.meldung {
+  position: fixed; left: 16px; right: 16px; bottom: calc(86px + var(--unten)); z-index: 40; margin: 0 auto; max-width: 520px;
+  background: #1b1f24; color: #fff; border-radius: 12px; padding: 12px 14px; font-size: 15px; box-shadow: 0 4px 16px rgba(0, 0, 0, .25);
+}
+.meldung.fehler { background: var(--fehler); }
