@@ -13,7 +13,7 @@ import { baueSicherung, liesSicherung, rueckfrage, erinnerung } from "./sicherun
 import { liesTypenschild, TypenschildFehler, FEHLER, FELDER as SCHILD_FELDER } from "./typenschild.js";
 
 // Muss zur Zahl im Cache-Namen von sw.js passen (tests/oberflaeche.test.js)
-const VERSION = 1;
+const VERSION = 3;
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -275,8 +275,27 @@ $("#banner-sichern").addEventListener("click", () => { geh("#/einstellungen"); s
 
 /* ---------- Gerät ---------- */
 const form = $("#felder");
+
+// Zustand per Knopf; erneutes Tippen auf den gewählten Knopf hebt die Wahl auf („nicht angegeben“)
 const zustandFeld = form.elements.zustand;
-zustandFeld.append(new Option("nicht angegeben", ""), ...ZUSTAENDE.map((z) => new Option(z, z)));
+const zustandKnoepfe = ZUSTAENDE.map((z) => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "zweit";
+  b.textContent = z;
+  b.dataset.zustand = z;
+  b.addEventListener("click", () => {
+    zustandFeld.value = zustandFeld.value === z ? "" : z;
+    zeigeZustand();
+    speichereFeld(zustandFeld);
+  });
+  return b;
+});
+$("#zustand-knoepfe").append(...zustandKnoepfe);
+
+function zeigeZustand() {
+  for (const b of zustandKnoepfe) b.setAttribute("aria-pressed", String(b.dataset.zustand === zustandFeld.value));
+}
 
 let gezeigterVorschlag = null; // auslesen.zeit des gezeigten Vorschlags, damit Häkchen beim Neuzeichnen bleiben
 
@@ -294,6 +313,7 @@ function fuelleFelder(g, nur = null) {
     if (!el.name || (nur && !nur.includes(el.name))) continue;
     el.value = el.name === "zubehoer" ? g.zubehoer.join("\n") : g[el.name];
   }
+  zeigeZustand();
 }
 
 function zeigeGeraetTeile(g) {
@@ -464,6 +484,12 @@ function zeigeVorschlag(g) {
     wert.className = "vorschlag-wert";
     wert.textContent = v[f];
     text.append(name, wert);
+    if (v.abgeleitet?.includes(f)) {
+      const marke = document.createElement("span");
+      marke.className = "vorschlag-abgeleitet";
+      marke.textContent = "abgeleitet aus Modell oder Logo, nicht vom Schild";
+      text.append(marke);
+    }
     if (g[f]) {
       const bisher = document.createElement("span");
       bisher.className = "vorschlag-bisher";

@@ -13,10 +13,17 @@ export const PREIS_AUS = 0.5;
 
 export const FELDER = ["bezeichnung", "hersteller", "modell", "seriennummer", "leistung", "spannung", "baujahr", "artikelnummer"];
 
+// Nur diese Felder darf Claude aus Modell und Logo ableiten, wenn sie auf dem Schild fehlen (E18, I42).
+// Alles andere kommt nur vom Schild.
+export const ABLEITBAR = ["bezeichnung", "hersteller"];
+
 export const SCHEMA = {
   type: "object",
-  properties: Object.fromEntries(FELDER.map((f) => [f, { type: "string" }])),
-  required: FELDER,
+  properties: {
+    ...Object.fromEntries(FELDER.map((f) => [f, { type: "string" }])),
+    abgeleitet: { type: "array", items: { type: "string", enum: ABLEITBAR } },
+  },
+  required: [...FELDER, "abgeleitet"],
   additionalProperties: false,
 };
 
@@ -25,6 +32,7 @@ export const AUFTRAG = [
   "Trage nur ein, was auf dem Schild lesbar steht. Was fehlt oder nicht sicher lesbar ist, bleibt ein leerer String. Nichts raten, nichts ergänzen.",
   "bezeichnung: Geräteart, wie sie auf dem Schild steht (z. B. Bohrhammer). hersteller: Firmen- oder Markenname. modell: Typ- oder Modellbezeichnung.",
   "seriennummer: Serien- oder Fabriknummer. leistung: mit Einheit (z. B. 800 W). spannung: mit Einheit (z. B. 230 V ~). baujahr: Jahr, wie angegeben. artikelnummer: Artikel- oder Bestellnummer.",
+  "Einzige Ausnahme: Steht bezeichnung oder hersteller nicht auf dem Schild, darfst du den Wert aus Modellbezeichnung oder Logo ableiten (z. B. Modell GBH → Bohrhammer), aber nur, wenn er eindeutig ist; sonst bleibt das Feld leer. Nenne jedes so abgeleitete Feld in der Liste abgeleitet (nur bezeichnung oder hersteller). Alle anderen Felder kommen ausschließlich vom Schild, nie abgeleitet.",
 ].join("\n");
 
 // Fehlerarten für die Warteschlange (E11): `wiederholbar` heißt, die App darf es später selbst erneut versuchen.
@@ -129,11 +137,14 @@ export function werteAntwortAus(json) {
     throw new TypenschildFehler(FEHLER.ANTWORT, { detail: "kein JSON-Objekt", requestId: json.id || null, usage });
   }
   const felder = Object.fromEntries(FELDER.map((f) => [f, typeof roh[f] === "string" ? roh[f].trim() : ""]));
-  return { felder, usage, kostenCent: kostenCent(usage) };
+  // Abgeleitet zählen nur erlaubte Felder, die auch einen Wert haben; jedes Feld höchstens einmal.
+  const liste = Array.isArray(roh.abgeleitet) ? roh.abgeleitet : [];
+  const abgeleitet = ABLEITBAR.filter((f) => liste.includes(f) && felder[f]);
+  return { felder, abgeleitet, usage, kostenCent: kostenCent(usage) };
 }
 
 // Liest ein verkleinertes Typenschild-Foto aus.
-// Liefert { felder, usage, kostenCent } oder wirft TypenschildFehler (Art in `fehler.art`).
+// Liefert { felder, abgeleitet, usage, kostenCent } oder wirft TypenschildFehler (Art in `fehler.art`).
 export async function liesTypenschild({ foto, schluessel, fetch }) {
   const koerper = anfrageKoerper(await bildDaten(foto));
   let antwort;

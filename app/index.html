@@ -114,9 +114,10 @@
           <label class="feld">Baujahr <input name="baujahr" inputmode="numeric" autocorrect="off"></label>
           <label class="feld">Artikelnummer <input name="artikelnummer" autocorrect="off" spellcheck="false"></label>
         </div>
-        <label class="feld">Zustand
-          <select name="zustand"></select>
-        </label>
+        <div class="feld">Zustand
+          <div class="zustand-knoepfe" id="zustand-knoepfe" role="group" aria-label="Zustand"></div>
+          <input type="hidden" name="zustand">
+        </div>
         <label class="feld">Standort <input name="standort" placeholder="z. B. Werkstatt, Regal 2"></label>
         <label class="feld">Zubehör <span class="klein">(eine Zeile je Teil)</span>
           <textarea name="zubehoer" rows="3"></textarea>

@@ -75,11 +75,14 @@ function mitAufruf(auslesen, { usage = null, kostenCent = 0 } = {}, zeit) {
   return { aufrufe: [...auslesen.aufrufe, { zeit, usage, kostenCent }], kostenCent: auslesen.kostenCent + kostenCent };
 }
 
-// ergebnis von typenschild.js: { felder, usage, kostenCent }. Die Felder bleiben Vorschlag, bis der Nutzer sie übernimmt.
+const vorschlagAus = (ergebnis) => (ergebnis.abgeleitet?.length ? { ...ergebnis.felder, abgeleitet: [...ergebnis.abgeleitet] } : { ...(ergebnis.felder ?? {}) });
+
+// ergebnis von typenschild.js: { felder, abgeleitet, usage, kostenCent }. Die Felder bleiben Vorschlag, bis der Nutzer sie übernimmt;
+// `vorschlag.abgeleitet` nennt die Felder, die Claude aus Modell oder Logo abgeleitet hat (nicht vom Schild, I42).
 export function auslesenFertig(g, ergebnis, jetzt = new Date()) {
   const zeit = jetzt.toISOString();
   return aendere(g, {
-    auslesen: { status: "fertig", fehler: "", zeit, vorschlag: ergebnis.felder ?? {}, ...mitAufruf(g.auslesen, ergebnis, zeit) },
+    auslesen: { status: "fertig", fehler: "", zeit, vorschlag: vorschlagAus(ergebnis), ...mitAufruf(g.auslesen, ergebnis, zeit) },
   }, jetzt);
 }
 

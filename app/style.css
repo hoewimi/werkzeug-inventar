@@ -113,11 +113,15 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--akzent); ou
 .vorschlaege input { width: 22px; height: 22px; margin: 2px 0 0; }
 .vorschlag-name { font-size: 13px; color: var(--leise); display: block; }
 .vorschlag-wert { font-weight: 600; word-break: break-word; }
+.vorschlag-abgeleitet { font-size: 13px; color: var(--warn); background: var(--warn-grund); border-radius: 6px; padding: 1px 8px; margin-top: 2px; display: inline-block; }
 .vorschlag-bisher { font-size: 13px; color: var(--warn); display: block; }
 .kosten { font-size: 14px; color: var(--leise); }
 .felder { display: grid; gap: 4px; }
 .feld { display: block; font-size: 14px; color: var(--leise); margin: 4px 0; }
 .feld input, .feld textarea, .feld select { color: var(--text); }
+.zustand-knoepfe { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.zustand-knoepfe button { flex: 1 1 auto; padding: 8px 12px; }
+.zustand-knoepfe button[aria-pressed=true] { background: var(--akzent); color: #fff; }
 .zwei { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .feld-fehler { display: block; color: var(--fehler); font-size: 13px; margin-top: 4px; }
 #entwurf-hinweis { background: var(--akzent-hell); border-radius: 10px; padding: 8px 12px; color: var(--akzent); }

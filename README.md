@@ -5,4 +5,4 @@ Web-App fürs iPhone zum Inventarisieren von Werkzeugmaschinen: zwei Fotos je Ge
 ## Benutzen
 In Safari https://hoewimi.github.io/werkzeug-inventar/ öffnen und über „Teilen“ > „Zum Home-Bildschirm“ ablegen. Die Daten bleiben nur auf dem eigenen Gerät.
 
-Aktuelle Version: 1
+Aktuelle Version: 3
