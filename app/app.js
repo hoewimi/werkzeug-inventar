@@ -10,10 +10,11 @@ import {
 import { verkleinere } from "./bild.js";
 import { csvDatei } from "./csv.js";
 import { baueSicherung, liesSicherung, rueckfrage, erinnerung } from "./sicherung.js";
+import { IMPRESSUM, impressumSichtbar } from "./rechtliches.js";
 import { liesTypenschild, TypenschildFehler, FEHLER, FELDER as SCHILD_FELDER } from "./typenschild.js";
 
 // Muss zur Zahl im Cache-Namen von sw.js passen (tests/oberflaeche.test.js)
-const VERSION = 3;
+const VERSION = 5;
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -892,6 +893,10 @@ async function zeigeEinstellungen() {
     ? "iOS löscht die Daten nicht von selbst. Die Sicherung schützt trotzdem, falls das iPhone verloren geht."
     : "iOS hat den dauerhaften Speicher nicht bestätigt und darf die Daten bei Platzmangel löschen. Die App erinnert darum öfter an die Sicherung.";
   $("#version").textContent = `Version ${VERSION} · Daten nur auf diesem iPhone`;
+  $("#ueber-version").textContent = `Werkzeug-Inventar, Version ${VERSION}`;
+  const impressum = impressumSichtbar(IMPRESSUM);
+  $("#impressum").hidden = !impressum;
+  $("#impressum-text").textContent = impressum ? IMPRESSUM : "";
 }
 
 $("#schluessel-speichern").addEventListener("click", async () => {

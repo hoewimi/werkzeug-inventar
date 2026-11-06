@@ -1,7 +1,7 @@
 // Service Worker der App (E26): Cache-first für die eigenen Dateien, damit die Home-Bildschirm-App offline startet.
 // Den Cache-Namen bei jeder Änderung an src/ erhöhen (und VERSION in app.js mit); dann lädt das iPhone alles neu.
 // Fremde Adressen (api.anthropic.com) werden nie angefasst oder gecacht.
-const CACHE = "werkzeug-inventar-v3";
+const CACHE = "werkzeug-inventar-v5";
 const DATEIEN = [
   "./",
   "./index.html",
@@ -11,6 +11,7 @@ const DATEIEN = [
   "./bild.js",
   "./csv.js",
   "./daten.js",
+  "./rechtliches.js",
   "./sicherung.js",
   "./typenschild.js",
   "./zip.js",
